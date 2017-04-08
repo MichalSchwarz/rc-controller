@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RC Controller</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #lc, #rc {
+                border: solid black 1px;
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+            }
+            #rc {
+                right: 10px;
+                left: initial;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="lc"></canvas>
+        <canvas id="rc"></canvas>
+        <script src="js/Touches.js"></script>
+        <script src="js/Controller_printer.js"></script>
+        <script>
+            var canvas_objects = {
+                'lc': document.getElementById("lc"),
+                'rc': document.getElementById("rc")
+            };
+            var printer = new Controller_printer(document, canvas_objects);
+            printer.init_controllers();
+            var touches = new Touches(canvas_objects, printer);
+            touches.add_listeners();
+        </script>
+    </body>
+</html>
