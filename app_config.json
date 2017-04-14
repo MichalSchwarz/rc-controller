@@ -1,0 +1,11 @@
+{
+    "app_name": "RC Controller",
+    "controls_id": "controls",
+    "lc_id": "left-cross",
+    "rc_id": "right-cross",
+    "rc_id": "right-cross",
+    "axis_size": 180,
+    "axis_style": "lightgray",
+    "control_point_style": "black",
+    "control_point_size": 10
+}

@@ -1,0 +1,10 @@
+#left-cross, #right-cross {
+    border: solid black 1px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+#right-cross {
+    right: 10px;
+    left: initial;
+}
