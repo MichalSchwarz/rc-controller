@@ -1,3 +1,5 @@
 /nbproject/private/
 /node_modules
 /www/dev_assets
+/coverage
+/.nyc_output

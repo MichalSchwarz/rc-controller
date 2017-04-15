@@ -34,7 +34,7 @@ export default class Controller_printer {
     }
 
     append_controls_to_page() {
-        var controls = document.createElement('div');
+        var controls = this.document.createElement('div');
         controls.id = this.config.controls_id;
         this.canvas_objects = this.create_canvas_objects(this.document);
         controls.appendChild(this.canvas_objects[this.config.lc_id]);
@@ -44,7 +44,7 @@ export default class Controller_printer {
 
     is_controls_in_page() {
         var result = false;
-        if(document.getElementById([this.config.controls_id]))
+        if(this.document.getElementById([this.config.controls_id]))
         {
             result = true;
         }
@@ -77,4 +77,4 @@ export default class Controller_printer {
         context.fillRect(this.config.axis_size / 2, 0, 1, canvas.height);
         context.fillRect(0, this.config.axis_size / 2, canvas.width, 1);
     }
-};
+}
