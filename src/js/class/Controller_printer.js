@@ -7,17 +7,11 @@ export default class Controller_printer {
 
     print() {
         var id, canvas;
-        if(!this.is_controls_in_page())
-        {
-            this.append_controls_to_page();
-        }
+        this.append_controls_to_page();
         for (id in this.canvas_objects ) {
-            if (this.canvas_objects.hasOwnProperty(id)) {
-                canvas = this.canvas_objects[id];
-                canvas.width = this.config.axis_size;
-                canvas.height = this.config.axis_size;
-                this.clear_canvas(canvas);
-            }
+            canvas = this.canvas_objects[id];
+            canvas.width = this.config.axis_size;
+            canvas.height = this.config.axis_size;
         }
     }
 

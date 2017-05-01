@@ -55,7 +55,8 @@ module.exports = {
     extractSass,
     new HtmlWebpackPlugin({
       title: require('./app_config.json').app_name,
-      inlineSource: '.(js|css)$'
+      inlineSource: '.(js|css)$',
+      template: './src/html/index.html'
     }),
     new HtmlWebpackInlineSourcePlugin()
   ]

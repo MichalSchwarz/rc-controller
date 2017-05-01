@@ -7,10 +7,8 @@ export default class Touches {
         var id;
         var canvas_objects = this.printer.get_canvas_objects();
         for (id in canvas_objects ) {
-            if (canvas_objects.hasOwnProperty(id)) {
-                this.add_touchstart(canvas_objects[id]);
-                this.add_touchmove(canvas_objects[id]);
-            }
+            this.add_touchstart(canvas_objects[id]);
+            this.add_touchmove(canvas_objects[id]);
         }
     }
 
@@ -57,9 +55,7 @@ export default class Touches {
     get_coords_in_limits(canvas, coords) {
         var coordinate;
         for (coordinate in coords) {
-            if (coords.hasOwnProperty(coordinate)) {
-                coords = this.get_coord_in_limits(canvas, coords, coordinate);
-            }
+            coords = this.get_coord_in_limits(canvas, coords, coordinate);
         }
         return coords;
     }
