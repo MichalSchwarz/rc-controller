@@ -7,5 +7,6 @@
     "axis_size": 180,
     "axis_style": "lightgray",
     "control_point_style": "black",
-    "control_point_size": 10
+    "control_point_size": 10,
+    "xhr_filter": 200
 }
