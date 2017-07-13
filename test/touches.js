@@ -1,4 +1,5 @@
 import Touches from '../src/js/class/Touches';
+import config from '../app_config.json';
 import assert from 'assert';
 
 describe('Touches', function() {
@@ -74,7 +75,7 @@ describe('Touches', function() {
         },
         draw_control_point: function(){}
     };
-    var touches = new Touches(printer);
+    var touches = new Touches(printer, config);
 
     it('should be constructed', function() {
       assert.equal(Object.prototype.toString(touches), '[object Object]');

@@ -12,6 +12,7 @@ export default class Touches {
         for (id in canvas_objects ) {
             this.add_touchstart(canvas_objects[id]);
             this.add_touchmove(canvas_objects[id]);
+            this.add_touchend(canvas_objects[id]);
         }
     }
 
@@ -39,6 +40,25 @@ export default class Touches {
         }, false);
     }
 
+    add_touchend(canvas) {
+        var that = this;
+        canvas.addEventListener("touchend", function (e) {
+            e.preventDefault();
+            var touch = that.get_touch_for_canvas(canvas, e.changedTouches);
+            var display_coords = that.get_touch_coords(canvas, touch);
+            var real_coords = that.get_real_coords(canvas, touch);
+            display_coords.x = that.config.axis_size/2;
+            real_coords.x = that.config.axis_size/2;
+            if(canvas.id === that.config.rc_id)
+            {
+                display_coords.y = that.config.axis_size/2;
+                real_coords.y = that.config.axis_size/2;
+            }
+            that.process_state_change(real_coords, canvas);
+            that.printer.draw_control_point(display_coords, canvas);
+        }, false);
+    }
+
     set_state_listener(listener, state) {
         this.state = state;
         this.listener = listener;
@@ -47,14 +67,12 @@ export default class Touches {
     process_state_change(real_coords, canvas) {
         if(this.state !== null) {
             if(canvas.id === this.config.lc_id) {
-                this.state.left_horizontal
-                        = Number.parseInt( 100 * real_coords.x / canvas.width );
+                this.state.left_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
                 this.state.left_vertical = 100 -
                         Number.parseInt( 100 * real_coords.y / canvas.height );
             }
             else if(canvas.id === this.config.rc_id) {
-                this.state.right_horizontal
-                        = Number.parseInt( 100 * real_coords.x / canvas.width );
+                this.state.right_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
                 this.state.right_vertical = 100 -
                         Number.parseInt( 100 * real_coords.y / canvas.height );
             }

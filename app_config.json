@@ -4,9 +4,9 @@
     "lc_id": "left-cross",
     "rc_id": "right-cross",
     "rc_id": "right-cross",
-    "axis_size": 180,
+    "axis_size": 220,
     "axis_style": "lightgray",
     "control_point_style": "black",
     "control_point_size": 10,
-    "xhr_filter": 200
+    "xhr_filter": 100
 }

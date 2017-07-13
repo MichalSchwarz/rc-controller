@@ -45,7 +45,10 @@
     "expr": true,
     "curly": true,
     "eqeqeq": true,
-    "esversion": 6
+    "esversion": 6,
+    "globals": {
+     "XMLHttpRequest": true
+    }
   },
   "author": "Michal Schwarz",
   "license": "MIT",

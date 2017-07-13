@@ -13,7 +13,12 @@ printer.print();
 var controllers = printer.get_canvas_objects();
 for (var id in controllers ) {
     printer.clear_canvas(controllers[id]);
-    printer.draw_control_point({x:config.axis_size/2, y:config.axis_size/2},
+    var y_position = config.axis_size/2;
+    if(id === config.lc_id)
+    {
+        y_position = config.axis_size-(config.control_point_size/2);
+    }
+    printer.draw_control_point({x:config.axis_size/2, y:y_position},
         controllers[id]);
 }
 touches.set_state_listener(communicator, state);
