@@ -8,5 +8,7 @@
     "axis_style": "lightgray",
     "control_point_style": "black",
     "control_point_size": 10,
+    "control_range": 130,
+    "control_range_offset": 25,
     "xhr_filter": 100
 }

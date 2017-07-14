@@ -48,6 +48,7 @@ export default class Communicator {
     }
 
     get_normalized_value(value) {
-        return Number.parseInt( 180 * (value / 100) );
+        var normalized = this.config.control_range * (value / 100);
+        return Number.parseInt( normalized ) + this.config.control_range_offset;
     }
 }
