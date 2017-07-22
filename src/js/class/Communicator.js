@@ -1,11 +1,11 @@
 export default class Communicator {
-    constructor(config) {
+    constructor(config, xhr) {
         this.actual_state = null;
         this.config = config;
         this.is_sending_needed = true;
         this.is_xhr_in_progress = false;
         this.last_state_change_request = null;
-        this.xhr = new XMLHttpRequest();
+        this.xhr = xhr;
         var that = this;
         this.xhr.addEventListener("loadend", function(){
             that.set_xhr_done();
@@ -47,6 +47,9 @@ export default class Communicator {
         return query;
     }
 
+    /**
+     * 25 === full off, 90 === middle on, 155 === full on
+     */
     get_normalized_value(value) {
         var normalized = this.config.control_range * (value / 100);
         return Number.parseInt( normalized ) + this.config.control_range_offset;

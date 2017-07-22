@@ -1,7 +1,7 @@
 export default class Touches {
-    constructor(printer, config) {
+    constructor(printer, config, state) {
         this.printer = printer;
-        this.state = null;
+        this.state = state;
         this.listener = null;
         this.config = config;
     }
@@ -59,23 +59,19 @@ export default class Touches {
         }, false);
     }
 
-    set_state_listener(listener, state) {
-        this.state = state;
+    set_state_listener(listener) {
         this.listener = listener;
     }
 
     process_state_change(real_coords, canvas) {
-        if(this.state !== null) {
-            if(canvas.id === this.config.lc_id) {
-                this.state.left_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
-                this.state.left_vertical = 100 -
-                        Number.parseInt( 100 * real_coords.y / canvas.height );
-            }
-            else if(canvas.id === this.config.rc_id) {
-                this.state.right_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
-                this.state.right_vertical = 100 -
-                        Number.parseInt( 100 * real_coords.y / canvas.height );
-            }
+        if(canvas.id === this.config.lc_id) {
+            this.state.left_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
+            this.state.left_vertical = 100 -
+                    Number.parseInt( 100 * real_coords.y / canvas.height );
+        } else {
+            this.state.right_horizontal = Number.parseInt( 100 * real_coords.x / canvas.width );
+            this.state.right_vertical = 100 -
+                    Number.parseInt( 100 * real_coords.y / canvas.height );
         }
         this.call_listener(this.state);
     }

@@ -1,4 +1,5 @@
 import Touches from '../src/js/class/Touches';
+import State from '../src/js/class/State';
 import config from '../app_config.json';
 import assert from 'assert';
 
@@ -22,12 +23,12 @@ describe('Touches', function() {
       changedTouches: [{
           pageX: 5000,
           pageY: 5000,
-          target: {id: 1}
+          target: {id: config.lc_id}
       },
       {
           pageX: 5000,
           pageY: 5000,
-          target: {id: 2}
+          target: {id: config.rc_id}
       }]
     };
     var touch_event_below = {
@@ -35,12 +36,12 @@ describe('Touches', function() {
       changedTouches: [{
           pageX: -100,
           pageY: -100,
-          target: {id: 1}
+          target: {id: config.lc_id}
       },
       {
           pageX: -200,
           pageY: -200,
-          target: {id: 2}
+          target: {id: config.rc_id}
       }]
     };
     var listener = function(event_name, event){
@@ -58,7 +59,7 @@ describe('Touches', function() {
                     offsetTop: 0,
                     width: 100,
                     height: 100,
-                    id: 1
+                    id: config.lc_id
                 },
                 rc: {
                     addEventListener: listener,
@@ -66,7 +67,7 @@ describe('Touches', function() {
                     offsetTop: 0,
                     width: 100,
                     height: 100,
-                    id: 2
+                    id: config.rc_id
                 }
             };
         },
@@ -75,7 +76,11 @@ describe('Touches', function() {
         },
         draw_control_point: function(){}
     };
-    var touches = new Touches(printer, config);
+    var state_listener = {
+        set_state_changed: function(){}
+    };
+    var state = new State();
+    var touches = new Touches(printer, config, state);
 
     it('should be constructed', function() {
       assert.equal(Object.prototype.toString(touches), '[object Object]');
@@ -83,6 +88,16 @@ describe('Touches', function() {
 
     it('should add touch listeners to page', function() {
       assert.equal(touches.add_listeners(),  undefined);
+    });
+
+    it('should process events without state listener', function() {
+      events.forEach(function(event){
+          event.event(touch_event_normal);
+      });
+    });
+
+    it('should be able to set state listener', function() {
+      assert.equal(touches.set_state_listener(state_listener),  undefined);
     });
 
     it('should process events', function() {
