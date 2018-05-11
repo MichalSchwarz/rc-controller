@@ -29,7 +29,7 @@ export default class Communicator {
     send_request(state) {
         if(!this.is_xhr_in_progress) {
             this.xhr.abort();
-            this.xhr.open('GET', '/'+this.get_state_querystring(state), true);
+            this.xhr.open('GET', '/control'+this.get_state_querystring(state), true);
             this.is_xhr_in_progress = true;
             this.xhr.send();
         } else {
@@ -40,18 +40,10 @@ export default class Communicator {
 
     get_state_querystring(state) {
         var query = '?';
-        query += 't='+this.get_normalized_value(state.left_horizontal);
-        query += '&y='+this.get_normalized_value(state.left_vertical);
-        query += '&p='+this.get_normalized_value(state.right_horizontal);
-        query += '&r='+this.get_normalized_value(state.right_vertical);
+        query += 'y='+state.left_horizontal;
+        query += '&t='+state.left_vertical;
+        query += '&p='+state.right_horizontal;
+        query += '&r='+state.right_vertical;
         return query;
-    }
-
-    /**
-     * 25 === full off, 90 === middle on, 155 === full on
-     */
-    get_normalized_value(value) {
-        var normalized = this.config.control_range * (value / 100);
-        return Number.parseInt( normalized ) + this.config.control_range_offset;
     }
 }
