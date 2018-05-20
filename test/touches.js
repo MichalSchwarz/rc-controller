@@ -74,6 +74,11 @@ describe('Touches', function() {
         get_control_point_size: function(){
             return 10;
         },
+        get_switch_arming_object() {
+            return {
+                addEventListener: listener
+            };
+        },
         draw_control_point: function(){}
     };
     var state_listener = {
@@ -116,5 +121,14 @@ describe('Touches', function() {
       events.forEach(function(event){
           event.event(touch_event_below);
       });
+    });
+
+    it('should process arming click', function() {
+        events.forEach(function(event){
+            event.checked = true;
+            event.event(touch_event_normal);
+            event.checked = false;
+            event.event(touch_event_normal);
+        });
     });
 });

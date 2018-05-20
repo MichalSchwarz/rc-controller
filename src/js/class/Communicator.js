@@ -44,6 +44,7 @@ export default class Communicator {
         query += '&t='+state.left_vertical;
         query += '&p='+state.right_horizontal;
         query += '&r='+state.right_vertical;
+        query += '&1='+state.switch_arming;
         return query;
     }
 }

@@ -27,6 +27,10 @@ export default class Controller_printer {
       return this.canvas_objects;
     }
 
+    get_switch_arming_object() {
+      return this.document.getElementById(this.config.switch_arming_id);
+    }
+
     append_controls_to_page() {
         var controls = this.document.createElement('div');
         controls.id = this.config.controls_id;

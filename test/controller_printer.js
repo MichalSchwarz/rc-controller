@@ -44,6 +44,10 @@ describe('Controller_printer', function() {
         assert.equal(printer.get_control_point_size(), config.control_point_size);
     });
 
+    it('should return switch_arming_object', function() {
+        assert.equal(printer.get_switch_arming_object(), '[object Object]');
+    });
+
     it('should to detect if controlls is present in page', function() {
         assert.equal(printer.is_controls_in_page(), true);
     });

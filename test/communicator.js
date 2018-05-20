@@ -35,7 +35,7 @@ describe('Communicator', function() {
 
     it('should send correct control string', function() {
       assert.equal(xhr_method, 'GET');
-      assert.equal(xhr_url, '/control?y=0&t=50&p=50&r=50');
+      assert.equal(xhr_url, '/control?y=50&t=0&p=50&r=50&1=0');
     });
 
     it('should accept state change and loadend event step by step', function() {

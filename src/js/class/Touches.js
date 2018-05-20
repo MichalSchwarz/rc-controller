@@ -14,6 +14,18 @@ export default class Touches {
             this.add_touchmove(canvas_objects[id]);
             this.add_touchend(canvas_objects[id]);
         }
+        this.add_switch_arming_change(this.printer.get_switch_arming_object());
+    }
+
+    add_switch_arming_change(switch_arming) {
+        var that = this;
+        switch_arming.addEventListener("change", function (e) {
+            e.preventDefault();
+            that.state.switch_arming = this.checked ? that.config.switch_on_value : that.config.switch_off_value;
+            if(that.listener !== null) {
+                that.listener.set_state_changed(that.state);
+            }
+        }, false);
     }
 
     add_touchstart(canvas) {
