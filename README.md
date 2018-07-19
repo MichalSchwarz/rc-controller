@@ -5,7 +5,7 @@
 
 ## Usage
 
-1. Copy the vontent of https://github.com/MichalSchwarz/rc-controller/blob/master/www/index.html to target device.
+1. Copy the content of https://github.com/MichalSchwarz/rc-controller/blob/master/www/index.html to target device.
    * E.g. Arduino:
    ```c
    const char index_html[] PROGMEM = "COPY HERE";
