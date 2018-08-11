@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "ESP32 Drone v0.0.1"
+date:   2018-08-10 11:31:33 +0200
+categories: esp32 quadcopter schema
+---
+Parts
+-----
+
+1. [Quadcopter kit QAV250 (ZMR250)](http://s.click.aliexpress.com/e/bKfHUzeC)
+2. [Arduino Mega 2560](http://s.click.aliexpress.com/e/c77n5xR6)
+3. [ESP32 Dev Board (with power source)](http://s.click.aliexpress.com/e/JXnNQYg)
+4. [3S LI-PO battery 11.1v 1300mAh 25C](http://s.click.aliexpress.com/e/cpO20Sre)
+5. [SP RACING F3 ACRO](http://s.click.aliexpress.com/e/cLgy2OBW)
+
+
+
+Source code
+-----------
+
+1. Arduino
+ * [I2C communication with ESP32](https://www.arduino.cc/en/Tutorial/MasterWriter)
+ * [PPM signal generator](https://quadmeup.com/generate-ppm-signal-with-arduino/)
+2. ESP32
+ * I2C communication with Arduino
+ * [Web Server](https://github.com/me-no-dev/ESPAsyncWebServer) to provide [RC controller](https://github.com/MichalSchwarz/rc-controller) and process controller commands
+
+
+
+
+
+![Schema]({{site.url}}{{site.baseurl}}/assets/Esp32ArduinoQadcopter.png)
