@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test nyc -a --reporter=html --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "analyze": "jshint --verbose --show-non-errors ./src",
-    "watch": "webpack --watch"
+    "watch": "webpack --env.production=dev --watch --mode production"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,6 @@
     "controller"
   ],
   "babel": {
-    "presets": [
-      "es2015"
-    ],
     "env": {
       "test": {
         "plugins": [
@@ -57,30 +54,31 @@
   },
   "homepage": "https://github.com/MichalSchwarz/rc-controller#readme",
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "babel-core": "^6.24.1",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-istanbul": "^4.1.1",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-istanbul": "^5.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-regenerator": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
     "babel-runtime": "^6.23.0",
-    "coveralls": "^2.13.0",
-    "cross-env": "^4.0.0",
-    "css-loader": "^0.28.0",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "html-webpack-inline-source-plugin": "0.0.8",
-    "html-webpack-plugin": "^2.28.0",
-    "jshint": "^2.9.4",
-    "json-loader": "^0.5.4",
-    "mocha": "^3.2.0",
-    "node-sass": "^4.5.2",
-    "nyc": "^10.2.0",
-    "sass-loader": "^6.0.3",
-    "style-loader": "^0.16.1",
-    "uglify-js": "^2.8.22",
-    "uglifyjs-webpack-plugin": "^0.4.2",
-    "webpack": "^2.3.3"
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-inline-source-plugin": "0.0.10",
+    "html-webpack-plugin": "^3.2.0",
+    "jshint": "^2.9.7",
+    "mini-css-extract-plugin": "^0.5.0",
+    "mocha": "^5.2.0",
+    "node-sass": "^4.11.0",
+    "nyc": "^13.1.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "uglify-js": "^3.4.9",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   }
 }
