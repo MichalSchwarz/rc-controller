@@ -20,6 +20,9 @@
     "controller"
   ],
   "babel": {
+    "presets": [
+      "@babel/env"
+    ],
     "env": {
       "test": {
         "plugins": [
@@ -33,7 +36,7 @@
       "src/js/class/**/*.js"
     ],
     "require": [
-      "babel-core/register"
+      "@babel/register"
     ],
     "sourceMap": false,
     "instrument": false
@@ -56,7 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "babel-core": "^6.24.1",
+    "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-istanbul": "^5.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
