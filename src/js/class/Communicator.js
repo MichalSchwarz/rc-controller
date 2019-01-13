@@ -1,7 +1,15 @@
+// @flow
+import State from "./State";
+
 export default class Communicator {
-    constructor(config, xhr) {
+    actual_state: ?State;
+    is_sending_needed: boolean;
+    is_xhr_in_progress: boolean;
+    last_state_change_request: ?State;
+    xhr: XMLHttpRequest;
+
+    constructor(xhr: XMLHttpRequest) {
         this.actual_state = null;
-        this.config = config;
         this.is_sending_needed = true;
         this.is_xhr_in_progress = false;
         this.last_state_change_request = null;
@@ -12,21 +20,21 @@ export default class Communicator {
         });
     }
 
-    set_state_changed(state) {
+    set_state_changed(state: State) {
         this.actual_state = state;
         this.send_request(state);
     }
 
     set_xhr_done() {
         this.is_xhr_in_progress = false;
-        if(this.last_state_change_request !== null)
+        if(this.last_state_change_request instanceof State)
         {
             this.send_request(this.last_state_change_request);
             this.last_state_change_request = null;
         }
     }
 
-    send_request(state) {
+    send_request(state: State) {
         if(!this.is_xhr_in_progress) {
             this.xhr.abort();
             this.xhr.open('GET', '/control'+this.get_state_querystring(state), true);
@@ -38,7 +46,7 @@ export default class Communicator {
 
     }
 
-    get_state_querystring(state) {
+    get_state_querystring(state: State) {
         var query = '?';
         query += 'y='+state.left_horizontal;
         query += '&t='+state.left_vertical;

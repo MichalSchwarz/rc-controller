@@ -1,3 +1,4 @@
+// @flow
 /* globals document */
 import Controller_printer from './class/Controller_printer';
 import Touches from './class/Touches';
@@ -9,7 +10,7 @@ var printer = new Controller_printer(document, config);
 var state = new State();
 var touches = new Touches(printer, config, state);
 var xhr = new XMLHttpRequest();
-var communicator = new Communicator(config, xhr);
+var communicator = new Communicator(xhr);
 printer.print();
 var controllers = printer.get_canvas_objects();
 for (var id in controllers ) {

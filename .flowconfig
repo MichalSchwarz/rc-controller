@@ -1,0 +1,12 @@
+[ignore]
+.*/test/.*
+.*/www/.*
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]

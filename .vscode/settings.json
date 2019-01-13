@@ -1,0 +1,4 @@
+{
+  "flow.enabled": true,
+  "javascript.validate.enable": false,
+}

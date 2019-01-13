@@ -1,5 +1,10 @@
+// @flow
 export default class Controller_printer {
-    constructor(document, config) {
+    document: Document;
+    config: Object;
+    canvas_objects: Object;
+
+    constructor(document: Document, config: Object) {
         this.config = config;
         this.document = document;
         this.canvas_objects = null;
@@ -27,8 +32,12 @@ export default class Controller_printer {
       return this.canvas_objects;
     }
 
-    get_switch_arming_object() {
-      return this.document.getElementById(this.config.switch_arming_id);
+    get_switch_arming_object(): HTMLInputElement {
+        var result = this.document.getElementById(this.config.switch_arming_id);
+        if(!(result instanceof HTMLInputElement)) {
+            throw "Cannot find arming_switch";
+        }
+        return result;
     }
 
     append_controls_to_page() {
@@ -37,19 +46,21 @@ export default class Controller_printer {
         this.canvas_objects = this.create_canvas_objects(this.document);
         controls.appendChild(this.canvas_objects[this.config.lc_id]);
         controls.appendChild(this.canvas_objects[this.config.rc_id]);
-        this.document.body.appendChild(controls);
+        if(this.document.body instanceof HTMLElement) {
+            this.document.body.appendChild(controls);
+        }
     }
 
     is_controls_in_page() {
         var result = false;
-        if(this.document.getElementById([this.config.controls_id]))
+        if(this.document.getElementById(this.config.controls_id))
         {
             result = true;
         }
         return result;
     }
 
-    create_canvas_objects(document) {
+    create_canvas_objects(document: Document) {
       var canvas_objects = {};
       canvas_objects[this.config.lc_id] =  document.createElement('canvas');
       canvas_objects[this.config.rc_id] =  document.createElement('canvas');
@@ -58,7 +69,7 @@ export default class Controller_printer {
       return canvas_objects;
     }
 
-    draw_control_point(coords, canvas) {
+    draw_control_point(coords: Object, canvas: HTMLCanvasElement) {
         var context = canvas.getContext("2d");
         this.clear_canvas(canvas);
         context.fillStyle = this.config.control_point_style;
@@ -68,7 +79,7 @@ export default class Controller_printer {
             this.get_control_point_size());
     }
 
-    clear_canvas(canvas) {
+    clear_canvas(canvas: HTMLCanvasElement) {
         var context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillStyle = this.config.axis_style;
