@@ -8,7 +8,8 @@
     "test": "cross-env NODE_ENV=test nyc -a --reporter=html --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "analyze": "jshint --verbose --show-non-errors ./src",
-    "watch": "webpack --env.production=dev --watch --mode production"
+    "watch": "webpack --env.production=dev --watch --mode production",
+    "build": "webpack --env.production=prod --mode production; node src/build/build.js"
   },
   "repository": {
     "type": "git",
