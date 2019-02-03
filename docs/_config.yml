@@ -22,6 +22,8 @@ url: "https://michalschwarz.github.io" # the base hostname & protocol for your s
 twitter_username:
 github_username:  MichalSchwarz
 
+google_analytics: UA-133741182-1
+
 # Build settings
 markdown: kramdown
 theme: minima
