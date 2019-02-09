@@ -1,130 +1,127 @@
 import Touches from '../src/js/class/Touches';
+import Communicator from '../src/js/class/Communicator'
+import Controller_printer from '../src/js/class/Controller_printer';
 import State from '../src/js/class/State';
 import config from '../app_config.json';
 import assert from 'assert';
+const fs = require('fs');
+const jsdom = require("jsdom");
 
-describe('Touches', function() {
-    var events = [];
-    var touch_event_normal = {
-      preventDefault: function(){},
-      changedTouches: [{
-          pageX: 10,
-          pageY: 10,
-          target: {id: 1}
-      },
-      {
-          pageX: 20,
-          pageY: 20,
-          target: {id: 2}
-      }]
-    };
-    var touch_event_over = {
-      preventDefault: function(){},
-      changedTouches: [{
-          pageX: 5000,
-          pageY: 5000,
-          target: {id: config.lc_id}
-      },
-      {
-          pageX: 5000,
-          pageY: 5000,
-          target: {id: config.rc_id}
-      }]
-    };
-    var touch_event_below = {
-      preventDefault: function(){},
-      changedTouches: [{
-          pageX: -100,
-          pageY: -100,
-          target: {id: config.lc_id}
-      },
-      {
-          pageX: -200,
-          pageY: -200,
-          target: {id: config.rc_id}
-      }]
-    };
-    var listener = function(event_name, event){
+describe('Touches', function () {
+    var printer: Controller_printer;
+    var window: Window;
+    var touches: Touches;
+    var state: State;
+    var events: Array<Object>;
+    var touch_event_normal: Object;
+    var touch_event_over: Object;
+    var touch_event_below: Object;
+    var listener = function (event_name, event) {
         events.push({
             'name': event_name,
             'event': event
         });
     };
-    var printer = {
-        get_canvas_objects: function(){
-            return {
-                lc: {
-                    addEventListener: listener,
-                    offsetLeft: 0,
-                    offsetTop: 0,
-                    width: 100,
-                    height: 100,
-                    id: config.lc_id
+
+    before(function (done) {
+        var htmlContent = '';
+        fs.readFile('src/html/index.html', 'utf8', function (err, fileContents) {
+            if (err) throw err;
+            window = (new jsdom.JSDOM(fileContents)).window;
+            global.HTMLElement = window.HTMLElement;
+            global.HTMLInputElement = window.HTMLInputElement;
+            global.HTMLBodyElement = window.HTMLBodyElement;
+            printer = new Controller_printer(window.document, config);
+            events = [];
+            state = new State();
+            touches = new Touches(printer, config, state);
+            printer.print();
+            printer.get_switch_arming_object().addEventListener = listener;
+            printer.canvas_objects[config.lc_id].addEventListener = listener;
+            printer.canvas_objects[config.rc_id].addEventListener = listener;
+            touch_event_normal = {
+                preventDefault: function () { },
+                changedTouches: [{
+                    pageX: 10,
+                    pageY: 10,
+                    target: printer.canvas_objects[config.lc_id]
                 },
-                rc: {
-                    addEventListener: listener,
-                    offsetLeft: 0,
-                    offsetTop: 0,
-                    width: 100,
-                    height: 100,
-                    id: config.rc_id
-                }
+                {
+                    pageX: 20,
+                    pageY: 20,
+                    target: printer.canvas_objects[config.rc_id]
+                }]
             };
-        },
-        get_control_point_size: function(){
-            return 10;
-        },
-        get_switch_arming_object() {
-            return {
-                addEventListener: listener
+            touch_event_over = {
+                preventDefault: function () { },
+                changedTouches: [{
+                    pageX: 5000,
+                    pageY: 5000,
+                    target: printer.canvas_objects[config.lc_id]
+                },
+                {
+                    pageX: 5000,
+                    pageY: 5000,
+                    target: printer.canvas_objects[config.rc_id]
+                }]
             };
-        },
-        draw_control_point: function(){}
-    };
-    var state_listener = {
-        set_state_changed: function(){}
-    };
-    var state = new State();
-    var touches = new Touches(printer, config, state);
-
-    it('should be constructed', function() {
-      assert.equal(Object.prototype.toString(touches), '[object Object]');
+            touch_event_below = {
+                preventDefault: function () { },
+                changedTouches: [{
+                    pageX: -100,
+                    pageY: -100,
+                    target: printer.canvas_objects[config.lc_id]
+                },
+                {
+                    pageX: -200,
+                    pageY: -200,
+                    target: printer.canvas_objects[config.rc_id]
+                }]
+            };
+            done();
+        });
     });
 
-    it('should add touch listeners to page', function() {
-      assert.equal(touches.add_listeners(),  undefined);
+    it('should be constructed', function () {
+        assert.equal(Object.prototype.toString(touches), '[object Object]');
     });
 
-    it('should process events without state listener', function() {
-      events.forEach(function(event){
-          event.event(touch_event_normal);
-      });
+    it('should add touch listeners to page', function () {
+        assert.equal(touches.add_listeners(), undefined);
     });
 
-    it('should be able to set state listener', function() {
-      assert.equal(touches.set_state_listener(state_listener),  undefined);
+    it('should process events without state listener', function () {
+        events.forEach(function (event) {
+            event.event(touch_event_normal);
+        });
     });
 
-    it('should process events', function() {
-      events.forEach(function(event){
-          event.event(touch_event_normal);
-      });
+    it('should be able to set state listener', function () {
+        var communicator = new Communicator(new window.XMLHttpRequest());
+        communicator.set_state_changed = function () { };
+        assert.equal(touches.set_state_listener(communicator), undefined);
     });
 
-    it('should process events over limits', function() {
-      events.forEach(function(event){
-          event.event(touch_event_over);
-      });
+    it('should process events', function () {
+        events.forEach(function (event) {
+            event.event(touch_event_normal);
+        });
     });
 
-    it('should process events below limits', function() {
-      events.forEach(function(event){
-          event.event(touch_event_below);
-      });
+    it('should process events over limits', function () {
+        events.forEach(function (event) {
+            event.event(touch_event_over);
+        });
     });
 
-    it('should process arming click', function() {
-        events.forEach(function(event){
+    it('should process events below limits', function () {
+        events.forEach(function (event) {
+            event.event(touch_event_below);
+        });
+    });
+
+    it('should process arming click', function () {
+        events.forEach(function (event) {
             event.checked = true;
             event.event(touch_event_normal);
             event.checked = false;

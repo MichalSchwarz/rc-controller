@@ -20,7 +20,7 @@ describe('Communicator', function() {
         send: function(){}
     };
     var state = new State();
-    var communicator = new Communicator(config, xhr);
+    var communicator = new Communicator(xhr);
 
     it('should be constructed', function() {
       assert.equal(Object.prototype.toString(communicator), '[object Object]');

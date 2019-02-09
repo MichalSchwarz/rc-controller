@@ -1,12 +1,17 @@
 // @flow
 export default class Controller_printer {
     document: Document;
+    body: HTMLBodyElement;
     config: Object;
     canvas_objects: Object;
 
     constructor(document: Document, config: Object) {
         this.config = config;
         this.document = document;
+        if(! (this.document.body instanceof HTMLBodyElement)) {
+            throw 'body is not HTMLBodyElement';
+        }
+        this.body = this.document.body;
         this.canvas_objects = null;
     }
 
@@ -46,9 +51,7 @@ export default class Controller_printer {
         this.canvas_objects = this.create_canvas_objects(this.document);
         controls.appendChild(this.canvas_objects[this.config.lc_id]);
         controls.appendChild(this.canvas_objects[this.config.rc_id]);
-        if(this.document.body instanceof HTMLElement) {
-            this.document.body.appendChild(controls);
-        }
+        this.body.appendChild(controls);
     }
 
     is_controls_in_page() {
