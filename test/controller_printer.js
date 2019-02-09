@@ -53,15 +53,6 @@ describe('Controller_printer', function() {
         assert.equal(Object.prototype.toString(printer.get_switch_arming_object()), '[object Object]');
     });
 
-    // it('should get canvas objects', function() {
-    //     assert.equal(Object.prototype.toString(printer.get_canvas_objects()), '[object Object]');
-    // });
-
-    // it('should be able draw controll point', function() {
-    //     var canvas = printer.get_canvas_objects()[config.lc_id];
-    //     assert.equal(printer.draw_control_point({x: 10, y: 10}, canvas), undefined);
-    // });
-
     it('should throw error if input not exists', function() {
         var window = (new jsdom.JSDOM()).window;
         var printer = new Controller_printer(window.document);
