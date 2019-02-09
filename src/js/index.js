@@ -4,24 +4,23 @@ import Controller_printer from './class/Controller_printer';
 import Touches from './class/Touches';
 import State from './class/State';
 import Communicator from './class/Communicator';
-import config from '../../app_config.json';
+import config from './config';
+import Coords from './class/Coords';
 
-var printer = new Controller_printer(document, config);
+var printer = new Controller_printer(document);
 var state = new State();
-var touches = new Touches(printer, config, state);
+var touches = new Touches(printer, state);
 var xhr = new XMLHttpRequest();
 var communicator = new Communicator(xhr);
-printer.print();
-var controllers = printer.get_canvas_objects();
-for (var id in controllers ) {
-    printer.clear_canvas(controllers[id]);
-    var y_position = config.axis_size/2;
-    if(id === config.lc_id)
-    {
-        y_position = config.axis_size-(config.control_point_size/2);
-    }
-    printer.draw_control_point({x:config.axis_size/2, y:y_position},
-        controllers[id]);
-}
+printer.clear_canvas(printer.get_left_canvas());
+printer.clear_canvas(printer.get_right_canvas());
+var rightCoords = new Coords();
+var leftCoords = new Coords();
+rightCoords.x = config.axis_size/2;
+rightCoords.y = config.axis_size/2;
+leftCoords.x = config.axis_size/2;
+leftCoords.y = config.axis_size-(config.control_point_size/2);
+printer.draw_control_point(rightCoords, printer.get_right_canvas());
+printer.draw_control_point(leftCoords, printer.get_left_canvas());
 touches.set_state_listener(communicator);
 touches.add_listeners();

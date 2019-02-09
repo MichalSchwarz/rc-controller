@@ -1,44 +1,44 @@
 // @flow
+
+import config from '../config';
+import Coords from '../class/Coords';
 export default class Controller_printer {
     document: Document;
     body: HTMLBodyElement;
-    config: Object;
-    canvas_objects: Object;
+    rightCanvas: HTMLCanvasElement;
+    leftCanvas: HTMLCanvasElement;
 
-    constructor(document: Document, config: Object) {
-        this.config = config;
+    constructor(document: Document) {
         this.document = document;
         if(! (this.document.body instanceof HTMLBodyElement)) {
             throw 'body is not HTMLBodyElement';
         }
         this.body = this.document.body;
-        this.canvas_objects = null;
+        this.print();
     }
 
     print() {
-        var id, canvas;
         this.append_controls_to_page();
-        for (id in this.canvas_objects ) {
-            canvas = this.canvas_objects[id];
-            canvas.width = this.config.axis_size;
-            canvas.height = this.config.axis_size;
-        }
+        this.rightCanvas.width = config.axis_size;
+        this.rightCanvas.height = config.axis_size;
+        this.leftCanvas.width = config.axis_size;
+        this.leftCanvas.height = config.axis_size;
     }
 
     get_control_point_size() {
-        return this.config.control_point_size;
+        return config.control_point_size;
     }
 
-    get_canvas_objects() {
-      if(!this.is_controls_in_page())
-      {
-          throw 'Chces canvas, ale oni jeste nejsou na strance';
-      }
-      return this.canvas_objects;
+    get_right_canvas() {
+      return this.rightCanvas;
+    }
+
+    get_left_canvas() {
+      return this.leftCanvas;
     }
 
     get_switch_arming_object(): HTMLInputElement {
-        var result = this.document.getElementById(this.config.switch_arming_id);
+        var result = this.document.getElementById(config.switch_arming_id);
         if(!(result instanceof HTMLInputElement)) {
             throw "Cannot find arming_switch";
         }
@@ -47,35 +47,24 @@ export default class Controller_printer {
 
     append_controls_to_page() {
         var controls = this.document.createElement('div');
-        controls.id = this.config.controls_id;
-        this.canvas_objects = this.create_canvas_objects(this.document);
-        controls.appendChild(this.canvas_objects[this.config.lc_id]);
-        controls.appendChild(this.canvas_objects[this.config.rc_id]);
+        controls.id = config.controls_id;
+        this.create_canvas_objects(this.document);
+        controls.appendChild(this.leftCanvas);
+        controls.appendChild(this.rightCanvas);
         this.body.appendChild(controls);
     }
 
-    is_controls_in_page() {
-        var result = false;
-        if(this.document.getElementById(this.config.controls_id))
-        {
-            result = true;
-        }
-        return result;
-    }
-
     create_canvas_objects(document: Document) {
-      var canvas_objects = {};
-      canvas_objects[this.config.lc_id] =  document.createElement('canvas');
-      canvas_objects[this.config.rc_id] =  document.createElement('canvas');
-      canvas_objects[this.config.lc_id].id = this.config.lc_id;
-      canvas_objects[this.config.rc_id].id = this.config.rc_id;
-      return canvas_objects;
+      this.rightCanvas =  document.createElement('canvas');
+      this.leftCanvas =  document.createElement('canvas');
+      this.leftCanvas.id = config.lc_id;
+      this.rightCanvas.id = config.rc_id;
     }
 
-    draw_control_point(coords: Object, canvas: HTMLCanvasElement) {
+    draw_control_point(coords: Coords, canvas: HTMLCanvasElement) {
         var context = canvas.getContext("2d");
         this.clear_canvas(canvas);
-        context.fillStyle = this.config.control_point_style;
+        context.fillStyle = config.control_point_style;
         context.fillRect(coords.x - this.get_control_point_size() / 2,
             coords.y - this.get_control_point_size() / 2,
             this.get_control_point_size(),
@@ -85,8 +74,8 @@ export default class Controller_printer {
     clear_canvas(canvas: HTMLCanvasElement) {
         var context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = this.config.axis_style;
-        context.fillRect(this.config.axis_size / 2, 0, 1, canvas.height);
-        context.fillRect(0, this.config.axis_size / 2, canvas.width, 1);
+        context.fillStyle = config.axis_style;
+        context.fillRect(config.axis_size / 2, 0, 1, canvas.height);
+        context.fillRect(0, config.axis_size / 2, canvas.width, 1);
     }
 }

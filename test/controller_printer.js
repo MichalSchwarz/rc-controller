@@ -1,5 +1,5 @@
 import Controller_printer from '../src/js/class/Controller_printer';
-import config from '../app_config.json';
+import config from '../src/js/config';
 import assert from 'assert';
 const fs = require('fs');
 const jsdom = require("jsdom");
@@ -17,7 +17,7 @@ describe('Controller_printer', function() {
             global.HTMLElement = window.HTMLElement;
             global.HTMLInputElement = window.HTMLInputElement;
             global.HTMLBodyElement = window.HTMLBodyElement;
-            printer = new Controller_printer(window.document, config);
+            printer = new Controller_printer(window.document);
             done();
         });
     });
@@ -45,10 +45,6 @@ describe('Controller_printer', function() {
         });
     });
 
-    it('should print canvas to page', function() {
-        assert.equal(printer.print(), undefined);
-    });
-
     it('should return control_point_size', function() {
         assert.equal(printer.get_control_point_size(), config.control_point_size);
     });
@@ -57,22 +53,18 @@ describe('Controller_printer', function() {
         assert.equal(Object.prototype.toString(printer.get_switch_arming_object()), '[object Object]');
     });
 
-    it('should to detect if controlls is present in page', function() {
-        assert.equal(printer.is_controls_in_page(), true);
-    });
+    // it('should get canvas objects', function() {
+    //     assert.equal(Object.prototype.toString(printer.get_canvas_objects()), '[object Object]');
+    // });
 
-    it('should get canvas objects', function() {
-        assert.equal(Object.prototype.toString(printer.get_canvas_objects()), '[object Object]');
-    });
-
-    it('should be able draw controll point', function() {
-        var canvas = printer.get_canvas_objects()[config.lc_id];
-        assert.equal(printer.draw_control_point({x: 10, y: 10}, canvas), undefined);
-    });
+    // it('should be able draw controll point', function() {
+    //     var canvas = printer.get_canvas_objects()[config.lc_id];
+    //     assert.equal(printer.draw_control_point({x: 10, y: 10}, canvas), undefined);
+    // });
 
     it('should throw error if input not exists', function() {
         var window = (new jsdom.JSDOM()).window;
-        var printer = new Controller_printer(window.document, config);
+        var printer = new Controller_printer(window.document);
         assert.throws(
         function ()
         {

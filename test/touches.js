@@ -2,7 +2,7 @@ import Touches from '../src/js/class/Touches';
 import Communicator from '../src/js/class/Communicator'
 import Controller_printer from '../src/js/class/Controller_printer';
 import State from '../src/js/class/State';
-import config from '../app_config.json';
+import config from '../src/js/config';
 import assert from 'assert';
 const fs = require('fs');
 const jsdom = require("jsdom");
@@ -31,25 +31,24 @@ describe('Touches', function () {
             global.HTMLElement = window.HTMLElement;
             global.HTMLInputElement = window.HTMLInputElement;
             global.HTMLBodyElement = window.HTMLBodyElement;
-            printer = new Controller_printer(window.document, config);
+            printer = new Controller_printer(window.document);
             events = [];
             state = new State();
             touches = new Touches(printer, config, state);
-            printer.print();
             printer.get_switch_arming_object().addEventListener = listener;
-            printer.canvas_objects[config.lc_id].addEventListener = listener;
-            printer.canvas_objects[config.rc_id].addEventListener = listener;
+            printer.leftCanvas.addEventListener = listener;
+            printer.rightCanvas.addEventListener = listener;
             touch_event_normal = {
                 preventDefault: function () { },
                 changedTouches: [{
                     pageX: 10,
                     pageY: 10,
-                    target: printer.canvas_objects[config.lc_id]
+                    target: printer.leftCanvas
                 },
                 {
                     pageX: 20,
                     pageY: 20,
-                    target: printer.canvas_objects[config.rc_id]
+                    target: printer.rightCanvas
                 }]
             };
             touch_event_over = {
@@ -57,12 +56,12 @@ describe('Touches', function () {
                 changedTouches: [{
                     pageX: 5000,
                     pageY: 5000,
-                    target: printer.canvas_objects[config.lc_id]
+                    target: printer.leftCanvas
                 },
                 {
                     pageX: 5000,
                     pageY: 5000,
-                    target: printer.canvas_objects[config.rc_id]
+                    target: printer.rightCanvas
                 }]
             };
             touch_event_below = {
@@ -70,12 +69,12 @@ describe('Touches', function () {
                 changedTouches: [{
                     pageX: -100,
                     pageY: -100,
-                    target: printer.canvas_objects[config.lc_id]
+                    target: printer.leftCanvas
                 },
                 {
                     pageX: -200,
                     pageY: -200,
-                    target: printer.canvas_objects[config.rc_id]
+                    target: printer.rightCanvas
                 }]
             };
             done();
@@ -122,9 +121,9 @@ describe('Touches', function () {
 
     it('should process arming click', function () {
         events.forEach(function (event) {
-            event.checked = true;
+            printer.get_switch_arming_object().checked = true;
             event.event(touch_event_normal);
-            event.checked = false;
+            printer.get_switch_arming_object().checked = false;
             event.event(touch_event_normal);
         });
     });

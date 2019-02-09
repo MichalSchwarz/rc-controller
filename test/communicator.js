@@ -1,7 +1,7 @@
 import Communicator from '../src/js/class/Communicator';
 import State from '../src/js/class/State';
 import assert from 'assert';
-import config from '../app_config.json';
+import config from '../src/js/config';
 
 describe('Communicator', function() {
     var events = [];

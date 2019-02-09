@@ -2,6 +2,7 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+import config from './src/js/config';
 
 module.exports = {
   entry: ['./src/js/index.js', './src/scss/rc_controller.scss'],
@@ -35,7 +36,7 @@ module.exports = {
       filename: "dev_assets/[name].[contenthash].css"
     }),
     new HtmlWebpackPlugin({
-      title: require('./app_config.json').app_name,
+      title: config.app_name,
       inlineSource: '.(js|css)$',
       template: './src/html/index.html'
     }),
