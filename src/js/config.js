@@ -22,9 +22,9 @@ class Config {
         this.lc_id = "left-cross";
         this.rc_id = "right-cross";
         this.switch_arming_id = "switch-arming";
-        this.switch_on_value = 100;
+        this.switch_on_value = 1000;
         this.switch_off_value = 0;
-        this.axis_size = 220;
+        this.axis_size = 260;
         this.axis_style = "lightgray";
         this.control_point_style = "black";
         this.control_point_size = 10;
