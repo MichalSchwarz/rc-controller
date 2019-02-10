@@ -89,14 +89,14 @@ export default class Touches {
     process_state_change(real_coords: Coords, canvas: HTMLCanvasElement) {
         var canvas_width = Number.parseInt(canvas.width.toString());
         var canvas_height = Number.parseInt(canvas.height.toString());
-        var real_x = 1000 * real_coords.x;
-        var real_y = 1000 * real_coords.y;
+        var real_x = config.scale * real_coords.x;
+        var real_y = config.scale * real_coords.y;
         if(canvas.id === config.lc_id) {
             this.state.left_horizontal = Math.round(real_x / canvas_width);
-            this.state.left_vertical = 1000 - Math.round(real_y / canvas_height);
+            this.state.left_vertical = config.scale - Math.round(real_y / canvas_height);
         } else {
             this.state.right_horizontal = Math.round( real_x / canvas_width );
-            this.state.right_vertical = 1000 - Math.round( real_y / canvas_height );
+            this.state.right_vertical = config.scale - Math.round( real_y / canvas_height );
         }
         this.call_listener(this.state);
     }

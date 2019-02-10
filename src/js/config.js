@@ -14,7 +14,8 @@ class Config {
     control_point_size: number;
     control_range: number;
     control_range_offset: number;
-    xhr_filter: number;
+    keepAliveInterval: number;
+    scale: number;
 
     constructor() {
         this.app_name = "RC Controller";
@@ -24,13 +25,14 @@ class Config {
         this.switch_arming_id = "switch-arming";
         this.switch_on_value = 1000;
         this.switch_off_value = 0;
-        this.axis_size = 260;
+        this.axis_size = 240;
         this.axis_style = "lightgray";
         this.control_point_style = "black";
         this.control_point_size = 10;
         this.control_range = 130;
         this.control_range_offset = 25;
-        this.xhr_filter = 10;
+        this.keepAliveInterval = 500;
+        this.scale = 1000;
     }
 }
 

@@ -16,6 +16,7 @@ describe('Touches', function () {
     var touch_event_normal: Object;
     var touch_event_over: Object;
     var touch_event_below: Object;
+    var communicator: Communicator;
     var listener = function (event_name, event) {
         events.push({
             'name': event_name,
@@ -27,10 +28,12 @@ describe('Touches', function () {
         var htmlContent = '';
         fs.readFile('src/html/index.html', 'utf8', function (err, fileContents) {
             if (err) throw err;
-            window = (new jsdom.JSDOM(fileContents)).window;
+            var dom = new jsdom.JSDOM(fileContents);
+            window = dom.window;
             global.HTMLElement = window.HTMLElement;
             global.HTMLInputElement = window.HTMLInputElement;
             global.HTMLBodyElement = window.HTMLBodyElement;
+            global.WebSocket = dom.window.WebSocket;
             printer = new Controller_printer(window.document);
             events = [];
             state = new State();
@@ -77,6 +80,7 @@ describe('Touches', function () {
                     target: printer.rightCanvas
                 }]
             };
+            communicator = new Communicator(window);
             done();
         });
     });
@@ -96,8 +100,6 @@ describe('Touches', function () {
     });
 
     it('should be able to set state listener', function () {
-        var communicator = new Communicator(new window.XMLHttpRequest());
-        communicator.set_state_changed = function () { };
         assert.equal(touches.set_state_listener(communicator), undefined);
     });
 
@@ -126,5 +128,10 @@ describe('Touches', function () {
             printer.get_switch_arming_object().checked = false;
             event.event(touch_event_normal);
         });
+    });
+
+    after(function (done) {
+        communicator.socket.close();
+        done();
     });
 });

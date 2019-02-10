@@ -1,7 +1,7 @@
 #left-cross, #right-cross {
     border: solid black 1px;
     position: absolute;
-    top: 10px;
+    bottom: 30px;
     left: 10px;
 }
 #right-cross {
@@ -9,8 +9,8 @@
     left: initial;
 }
 #switch-arming {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     position: absolute;
-    left: calc(50% - 10px);
+    left: calc(50% - 20px);
 }
