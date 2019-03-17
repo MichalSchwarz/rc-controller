@@ -33,7 +33,6 @@ describe('Touches', function () {
             global.HTMLElement = window.HTMLElement;
             global.HTMLInputElement = window.HTMLInputElement;
             global.HTMLBodyElement = window.HTMLBodyElement;
-            global.WebSocket = dom.window.WebSocket;
             printer = new Controller_printer(window.document);
             events = [];
             state = new State();
@@ -128,10 +127,5 @@ describe('Touches', function () {
             printer.get_switch_arming_object().checked = false;
             event.event(touch_event_normal);
         });
-    });
-
-    after(function (done) {
-        communicator.socket.close();
-        done();
     });
 });

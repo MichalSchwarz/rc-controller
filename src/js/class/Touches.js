@@ -30,7 +30,7 @@ export default class Touches {
 
     add_switch_arming_change(switch_arming: HTMLInputElement) {
         var that = this;
-        switch_arming.addEventListener("change", function (e) {
+        switch_arming.addEventListener("change", function (e: Event) {
             e.preventDefault();
             that.state.switch_arming = switch_arming.checked ? config.switch_on_value : config.switch_off_value;
             if(that.listener instanceof Communicator) {
