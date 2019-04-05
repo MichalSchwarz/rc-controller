@@ -7,8 +7,10 @@ export default class Communicator {
     is_sending_needed: boolean;
     is_xhr_in_progress: boolean;
     last_state_change_request: ?State;
+    checkTimer: ?TimeoutID;
     xhr: XMLHttpRequest;
     window: window;
+    statusIndicator: HTMLElement;
 
     constructor(window: window) {
         this.window = window;
@@ -18,6 +20,11 @@ export default class Communicator {
         this.last_state_change_request = null;
         this.xhr = new XMLHttpRequest();
         var that = this;
+        var statusIndicator = document.getElementById(config.statusIndicatorId);
+        if(!(statusIndicator instanceof HTMLElement)) {
+            throw "Status indicator is not present";
+        }
+        this.statusIndicator = statusIndicator;
         this.xhr.addEventListener("loadend", function(){
             that.set_xhr_done();
         });
@@ -45,6 +52,13 @@ export default class Communicator {
             this.send_request(this.last_state_change_request);
             this.last_state_change_request = null;
         }
+        this.statusIndicator.style.backgroundColor = "green";
+        if(this.checkTimer) {
+            clearTimeout(this.checkTimer);
+        }
+        this.checkTimer = setTimeout(() => {
+            this.statusIndicator.style.backgroundColor = "red";
+        }, 600);
     }
 
     send_request(state: State) {

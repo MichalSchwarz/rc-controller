@@ -3,6 +3,7 @@
 class Config {
     app_name: string;
     controls_id: string;
+    statusIndicatorId: string;
     lc_id: string;
     rc_id: string;
     switch_arming_id: string;
@@ -20,6 +21,7 @@ class Config {
     constructor() {
         this.app_name = "RC Controller";
         this.controls_id = "controls";
+        this.statusIndicatorId = "status-indicator";
         this.lc_id = "left-cross";
         this.rc_id = "right-cross";
         this.switch_arming_id = "switch-arming";
