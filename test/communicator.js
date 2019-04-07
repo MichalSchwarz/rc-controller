@@ -32,6 +32,7 @@ describe('Communicator', function() {
         if (err) throw err;
         var dom = new jsdom.JSDOM(fileContents);
         window = dom.window;
+        global.document = dom;
         global.HTMLElement = window.HTMLElement;
         global.XMLHttpRequest = xhr;
         global.HTMLInputElement = window.HTMLInputElement;
@@ -51,8 +52,6 @@ describe('Communicator', function() {
     });
 
     it('should accept more state changes before loadend occurs', function() {
-      console.log('prase');
-      console.log(communicator.set_state_changed(state));
       assert.equal(communicator.set_state_changed(state), undefined);
       assert.equal(communicator.set_state_changed(state), undefined);
       assert.equal(events['loadend'](), undefined);
@@ -71,5 +70,14 @@ describe('Communicator', function() {
     it('should accept state change and loadend event step by step', function() {
       assert.equal(communicator.set_state_changed(state), undefined);
       assert.equal(events['loadend'](), undefined);
+    });
+
+    it('should throw exception when status indicator is not present', function() {
+      assert.throws(
+        function ()
+        {
+          var dom = new jsdom.JSDOM();
+          new Communicator(dom.window);
+        });
     });
 });

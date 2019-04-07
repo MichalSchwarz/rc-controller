@@ -20,7 +20,7 @@ export default class Communicator {
         this.last_state_change_request = null;
         this.xhr = new XMLHttpRequest();
         var that = this;
-        var statusIndicator = document.getElementById(config.statusIndicatorId);
+        var statusIndicator = window.document.getElementById(config.statusIndicatorId);
         if(!(statusIndicator instanceof HTMLElement)) {
             throw "Status indicator is not present";
         }
