@@ -1,0 +1,127 @@
+---
+layout: post
+title:  "How to Build a ESP32 Drone controlled by Web browser"
+date:   2019-05-07 11:31:33 +0200
+categories: esp32 quadcopter F450 asgard32 schema
+---
+Motivation
+-----
+I bought a drone kit for autonomous flight experiments. A number of so-called Flight Controllers are available on the Internet. I assumed I could use somthing like [BetaFlight](https://github.com/betaflight/betaflight) to manage basic tasks such as position hold. Unfortunately, this is currently not possible. BetaFlight is currently able to control a throttle, let the drone fly horizontally, avoid set a greater than the preset flight angle and to veer. BetaFlight must be a propperly set of course.
+
+The pilot is a feedback control system. There is many ways how to transfer this responsibility to a software. Because i am a web developer, it is easy for me to connect the drone to the internet and send commands to it via higher programming languages such as JavaScript. At first I planned to use an Arduino, ultrasonic and barometric sensors for altitude hold. Low level control itself should have been provided by the Arduino. All I had to do was to design the control system.
+
+I wanted to try the drone before I started designing the autonomous control system. I had no traditional RC controller. I thought to make it myself. After the first lite version was done, i've published [first flight video](https://www.youtube.com/watch?v=AE7AcuQcWvU){:target="_blank"}. Dozens of people contacted me asking for advice. I decided to make a really useful WiFi RC controller and write this tutorial.
+
+Warning
+-------
+
+Drone is a very dangerous machine that can cause great damage to property and health. You do so at your own risk and are responsible for compliance with the laws of your country's jurisdiction.
+
+WiFi was not designed for real time robust control applications. It is not appropriate to it. Especially when used with mobile web browser. There are many layers between user fingers and real drone behavior. My vision was to send commands to an autonomous system instead of it's real time control.
+
+Selection and construction of a suitable drone
+----------------------------------
+
+It is not a goal of this tutorial to explain building of a drone itself. There is many informations about it on the Internet. Here is only few of my insights.
+
+My first drone was [QAV 250 kit](http://s.click.aliexpress.com/e/hjXHYEy){:target="_blank"}. It was the cheapest frame, but it was not appropriate for my purposes. It was too fast system with insufficient carrying capacity. It was asymmetric and was not enough stable. You can see it on [first flight video](https://www.youtube.com/watch?v=AE7AcuQcWvU&t=160s){:target="_blank"}.
+
+[![Esp32 Asgard32-F7 Drone]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-full-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-full.jpg){:target="_blank"}
+[![Esp32 Asgard32-F7 Drone controller]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-controller-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-controller.jpg){:target="_blank"}
+
+I am currently using setup below
+* Frame [F450](http://s.click.aliexpress.com/e/bv4Z0yfm){:target="_blank"}
+* Motors [GARTT ML 2212 920KV 230W](http://s.click.aliexpress.com/e/nFLy0VE){:target="_blank"}
+* Propellers [10x4.5"](http://s.click.aliexpress.com/e/cHpH2xPS){:target="_blank"}
+* FC+ESC [Asgard32 F7](http://s.click.aliexpress.com/e/bGTNvcrW){:target="_blank"}
+* various 3S and 4S batteries such as [CNHL 4S 1500mAh](http://s.click.aliexpress.com/e/by3KQYpS){:target="_blank"}
+
+[![Esp32 Asgard32-F7 Drone Motor Gart ML2212 920KV]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-motor-Gart_ML2212_920KV-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-motor-Gart_ML2212_920KV.jpg){:target="_blank"}
+[![Esp32 Asgard32-F7 Drone]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-back-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-back.jpg){:target="_blank"}
+
+
+Selection and construction of a suitable ESP32 module
+-------------------------------
+
+I am using [Wemos D1 ESP32](http://s.click.aliexpress.com/e/biEuTrYy){:target="_blank"}. It has no external antenna connector. I haven't found any dev module with it. Maximum range is about 50 meters without external antenna in open space. It was measured with my Samsung Galaxy S6.
+
+[![Esp32 Asgard32-F7 LF33CV]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-LF33CV-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-LF33CV.jpg){:target="_blank"}
+[![Wemos D1 R32 Esp32]({{site.url}}{{site.baseurl}}/assets/Wemos_D1_R32_Esp32-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Wemos_D1_R32_Esp32.jpg){:target="_blank"}
+
+I am using [LF33CV](http://s.click.aliexpress.com/e/ctaoIoFq){:target="_blank"} as a Power supply for ESP32. Wemos D1 R32 has its own power supply, but it doesn't work with Asgard 5V (4.7V effectively). Let's take a look at electrical schema.
+
+[![Esp32 Asgard32-F7 Drone schematic]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-schematic.jpg)]({{site.url}}{{site.baseurl}}/assets/Esp32-Asgard32_F7-Drone-schematic.jpg){:target="_blank"}
+
+You may notice that IO17 pin is connected to pin RX1 and not to SBUS in photos. It's because I have broken the SBUS pin. RX1 should be the same.
+
+
+Asgard32 F7 BetaFlight setup
+-------------------------------
+
+First of all, we need to update FC firmware to newest version(AG3XF7). If you are Linux user, you need to allow write access to USB. Please follow instructions in [https://github.com/betaflight/betaflight/wiki/Installing-Betaflight](https://github.com/betaflight/betaflight/wiki/Installing-Betaflight){:target="_blank"} , then connect boot jumper on FC
+
+[![Asgard32-F7 boot jumper]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-boot-jumper-thumb.jpg)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-boot-jumper.jpg){:target="_blank"}
+
+Next, we need to check some configuration options:
+
+* Ports / UART1
+  * Serial Rx
+
+  [![Asgard32 F7 BetaFlight port configuration]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-ports-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-ports.png){:target="_blank"}
+
+* Configuration
+  * ESC/Motor Features
+    * DSHOT1200 + MOTOR_STOP
+  * Board and Sensor Alignment
+    * check real position of FC in your drone
+  * Reciever
+    * Serial-based reciever + IBUS
+
+  [![Asgard32 F7 BetaFlight ESC/Motor + Board and Sensor Alignment]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-motor-board_alignment-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-motor-board_alignment.png){:target="_blank"}
+  [![Asgard32 F7 BetaFlight Reciever]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-reciever-ibus-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-reciever-ibus.png){:target="_blank"}
+
+* PID Tuning
+  * for more informations please visit [https://github.com/betaflight/betaflight/wiki/PID-Tuning-Guide](https://github.com/betaflight/betaflight/wiki/PID-Tuning-Guide){:target="_blank"}
+
+  [![Asgard32 F7 BetaFlight PID Tuning]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-pid-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-pid.png){:target="_blank"}
+
+* Reciever
+  * check my Deadband configuration for beginners. Display is not as accurate as controller sticks
+
+  [![Asgard32 F7 BetaFlight Reciever]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-reciever-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-reciever.png){:target="_blank"}
+
+* Modes
+  * there is only one AUX switch in controller v1.0.0, so it enable all modes
+
+  [![Asgard32 F7 BetaFlight Modes]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-modes-thumb.png)]({{site.url}}{{site.baseurl}}/assets/Asgard32_F7-BetaFlight-modes.png){:target="_blank"}
+
+
+Upload ESP32 software
+----------------------
+
+Download [https://github.com/MichalSchwarz/wifi-drone-esp32](https://github.com/MichalSchwarz/wifi-drone-esp32){:target="_blank"} in to your preferred directory:
+```bash
+git clone --branch v1.0.0 git@github.com:MichalSchwarz/wifi-drone-esp32.git
+```
+
+Then download JS controller [https://github.com/MichalSchwarz/rc-controller](https://github.com/MichalSchwarz/rc-controller){:target="_blank"} in to your preferred directory:
+```bash
+git clone --branch v1.0.0 git@github.com:MichalSchwarz/rc-controller.git
+```
+
+[![JavaScript RC Controler]({{site.url}}{{site.baseurl}}/assets/js-rc-controller-thumb.png)]({{site.url}}{{site.baseurl}}/assets/js-rc-controller.png){:target="_blank"}
+
+Two more files are needed to compile esp32 project. The first one is [secret.h]({{site.url}}{{site.baseurl}}/assets/secret.h){:target="_blank"}, there you can specify drone wifi SSID and password. Default SSID is `quadcopter` and password is also `quadcopter`.
+
+```bash
+cd wifi-drone-esp32/src
+wget {{site.url}}{{site.baseurl}}/assets/secret.h
+```
+
+The second one is JS controller itself. We can copy it from rc-controller project or simply make a symbolic link:
+
+```bash
+ln -s ../../rc-controller/dist/index_html.h
+```
+
+I am using [VS Code](https://code.visualstudio.com/){:target="_blank"} with [Arduino plugin](https://github.com/Microsoft/vscode-arduino){:target="_blank"} for compile and upload code to ESP32. Standard esp32 library is needed for compilation, for more informations please visit [https://github.com/espressif/arduino-esp32](https://github.com/espressif/arduino-esp32){:target="_blank"}.
