@@ -3,6 +3,7 @@ layout: post
 title:  "How to Build a ESP32 Drone controlled by Web browser"
 date:   2019-05-07 11:31:33 +0200
 categories: esp32 quadcopter F450 asgard32 schema
+last_modified_at: 2019-05-09 17:31:33 +0200
 ---
 Motivation
 -----
@@ -125,3 +126,5 @@ ln -s ../../rc-controller/dist/index_html.h
 ```
 
 I am using [VS Code](https://code.visualstudio.com/){:target="_blank"} with [Arduino plugin](https://github.com/Microsoft/vscode-arduino){:target="_blank"} for compile and upload code to ESP32. Standard esp32 library is needed for compilation, for more informations please visit [https://github.com/espressif/arduino-esp32](https://github.com/espressif/arduino-esp32){:target="_blank"}.
+
+{% include youtube.html id='F2IpekwRwj8' %}

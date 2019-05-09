@@ -22,4 +22,5 @@
 
 ## Videos
 
-[First flight video](https://www.youtube.com/watch?v=AE7AcuQcWvU)
+* [F450 + Asgard32 F7](https://www.youtube.com/watch?v=F2IpekwRwj8)
+* [First flight video](https://www.youtube.com/watch?v=AE7AcuQcWvU)
